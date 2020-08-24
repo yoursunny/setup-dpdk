@@ -8,6 +8,11 @@ jobs:
   test:
     runs-on: ubuntu-18.04
     steps:
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/setup-dpdk.cache.*
+          key: DPDK
       - uses: actions/checkout@v2
       - uses: ./
         with:
