@@ -8,11 +8,14 @@ jobs:
   test:
     runs-on: ubuntu-18.04
     steps:
+      - id: make-cache-key
+        run: |
+          echo "::set-output name=cpuflags::$(lscpu -J | jq -r '.lscpu[] | select(.field=="Flags:") | .data | gsub("[^a-z0-9]"; "")')"
       - uses: actions/cache@v2
         with:
           path: |
             ~/setup-dpdk.cache.*
-          key: DPDK
+          key: ${{ steps.make-cache-key.outputs.cpuflags }}
       - uses: actions/checkout@v2
       - uses: ./
         with:

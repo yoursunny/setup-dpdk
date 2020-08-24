@@ -18,5 +18,20 @@ steps:
     spdk-version: "20.07" # required
     hugepages: 2048       # optional
   env:
-    CC: gcc-8 # optional; compiler must be installed
+    CC: gcc-7 # optional; compiler must be installed
+```
+
+Optionally, enable caching for faster installation.
+CPU flags should appear as (part of) the cache key, because DPDK is built with `-march=native`.
+
+```yaml
+steps:
+  - id: make-cache-key
+    run: |
+      echo "::set-output name=cpuflags::$(lscpu -J | jq -r '.lscpu[] | select(.field=="Flags:") | .data | gsub("[^a-z0-9]"; "")')"
+  - uses: actions/cache@v2
+    with:
+      path: |
+        ~/setup-dpdk.cache.*
+      key: ${{ steps.make-cache-key.outputs.cpuflags }}
 ```
