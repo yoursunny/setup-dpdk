@@ -1,0 +1,17 @@
+name: test
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./
+        with:
+          dpdk-version: "20.08"
+          spdk-version: "20.07"
+          dynamic-only: true
+          hugepages: 1024
+      - run: find /usr/local/bin -name 'dpdk*' -or -name 'spdk*'

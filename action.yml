@@ -1,0 +1,22 @@
+name: "Setup DPDK and SPDK"
+description: "Install Data Plane Development Kit (DPDK) and Storage Performance Development Kit (SPDK)"
+inputs:
+  dpdk-version:
+    description: "DPDK version"
+    required: true
+  spdk-version:
+    description: "SPDK version"
+    required: true
+  hugepages:
+    description: "number of 2MB hugepages"
+    required: false
+    default: 2048
+runs:
+  using: composite
+  steps:
+    - run: $GITHUB_ACTION_PATH/main.sh
+      shell: bash
+      env:
+        DPDKVER: ${{ inputs.dpdk-version }}
+        SPDKVER: ${{ inputs.spdk-version }}
+        NRHUGE: ${{ inputs.hugepages }}
