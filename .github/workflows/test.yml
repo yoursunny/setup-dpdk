@@ -1,6 +1,7 @@
 name: test
 on:
   push:
+  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -12,6 +13,5 @@ jobs:
         with:
           dpdk-version: "20.08"
           spdk-version: "20.07"
-          dynamic-only: true
           hugepages: 1024
       - run: find /usr/local/bin -name 'dpdk*' -or -name 'spdk*'
