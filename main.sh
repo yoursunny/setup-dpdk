@@ -16,9 +16,14 @@ fi
 sudo apt-get install python3-setuptools
 sudo scripts/pkgdep.sh
 
+MESONVER=$(meson --version)
+
 cd $HOME/setup-dpdk/dpdk_$DPDKVER
 if ! [[ -f meson.build ]]; then
   curl -sL https://static.dpdk.org/rel/dpdk-$DPDKVER.tar.xz | tar -xJ --strip-components=1
+fi
+if jq -e '.meson_version.full != "'$(meson --version)'"' build/meson-info/meson-info.json &>/dev/null; then
+  rm -rf build/
 fi
 if ! [[ -f build/lib/librte_eal.a ]]; then
   meson -Dtests=false --libdir=lib build
@@ -42,7 +47,7 @@ cd $HOME/setup-dpdk
 tar -cJf $CACHEFILE dpdk_$DPDKVER spdk_$SPDKVER
 
 if [[ $NRHUGE -gt 0 ]]; then
-  echo $NRHUGE | sudo tee /sys/devices/system/node/node0/hugepages/hugepages-2048kB/nr_hugepages >/dev/null
+  echo $NRHUGE | sudo tee /sys/devices/system/node/node*/hugepages/hugepages-2048kB/nr_hugepages >/dev/null
   sudo mkdir -p /mnt/huge2M
   sudo mount -t hugetlbfs nodev /mnt/huge2M -o pagesize=2M
 fi

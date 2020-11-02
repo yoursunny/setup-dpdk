@@ -8,7 +8,7 @@ inputs:
     description: "SPDK version"
     required: true
   hugepages:
-    description: "number of 2MB hugepages"
+    description: "number of 2MB hugepages per NUMA socket"
     required: false
     default: 2048
 runs:
