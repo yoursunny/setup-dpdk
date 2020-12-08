@@ -1,14 +1,20 @@
-name: "Setup DPDK and SPDK"
-description: "Install Data Plane Development Kit (DPDK) and Storage Performance Development Kit (SPDK)"
+name: Setup DPDK and SPDK
+description: Install Data Plane Development Kit (DPDK) and Storage Performance Development Kit (SPDK)
 inputs:
   dpdk-version:
-    description: "DPDK version"
+    description: DPDK version
     required: true
   spdk-version:
-    description: "SPDK version"
+    description: SPDK version
     required: true
+  target-arch:
+    description: target architecture
+    required: false
+    default: haswell
+    # GitHub uses Azure Standard_DS2_v2, oldest CPU is 'haswell'
+    # change to 'native' if using a self-hosted runner
   hugepages:
-    description: "number of 2MB hugepages per NUMA socket"
+    description: number of 2MB hugepages per NUMA socket
     required: false
     default: 2048
 runs:
@@ -20,3 +26,4 @@ runs:
         DPDKVER: ${{ inputs.dpdk-version }}
         SPDKVER: ${{ inputs.spdk-version }}
         NRHUGE: ${{ inputs.hugepages }}
+        ARCH: haswell

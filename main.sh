@@ -4,7 +4,7 @@ set -o pipefail
 
 mkdir -p $HOME/setup-dpdk/dpdk_$DPDKVER $HOME/setup-dpdk/spdk_$SPDKVER
 cd $HOME/setup-dpdk
-CACHEFILE=$HOME/setup-dpdk.cache.$DPDKVER-$SPDKVER.txz
+CACHEFILE=$HOME/setup-dpdk.cache.txz
 if [[ -f $CACHEFILE ]]; then
   tar -xJf $CACHEFILE
 fi
@@ -26,7 +26,7 @@ if jq -e '.meson_version.full != "'$(meson --version)'"' build/meson-info/meson-
   rm -rf build/
 fi
 if ! [[ -f build/lib/librte_eal.a ]]; then
-  meson -Dtests=false --libdir=lib build
+  meson -Ddebug=true -Doptimization=3 -Dmachine=$ARCH -Dtests=false --libdir=lib build
   ninja -C build
 fi
 sudo ninja -C build install
@@ -35,7 +35,7 @@ sudo ldconfig
 
 cd $HOME/setup-dpdk/spdk_$SPDKVER
 if ! [[ -f build/lib/libspdk_env_dpdk.a ]]; then
-  ./configure --enable-debug --disable-tests --with-shared \
+  ./configure --target-arch=$ARCH --enable-debug --disable-tests --with-shared \
     --with-dpdk=/usr/local --without-vhost --without-isal --without-fuse
   make -j$(nproc)
 fi
