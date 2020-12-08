@@ -25,5 +25,5 @@ runs:
       env:
         DPDKVER: ${{ inputs.dpdk-version }}
         SPDKVER: ${{ inputs.spdk-version }}
+        TARGETARCH: ${{ inputs.target-arch }}
         NRHUGE: ${{ inputs.hugepages }}
-        ARCH: haswell

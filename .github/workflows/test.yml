@@ -23,13 +23,12 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: |
-            ~/setup-dpdk.cache.txz
+            ~/setup-dpdk
           key: ${{ matrix.os }}_${{ matrix.compiler }}_${{ hashFiles('.github/workflows/*.yml', 'action.yml', 'main.sh') }}
       - uses: ./
         with:
           dpdk-version: '20.11'
           spdk-version: '20.10'
-          hugepages: 1024
       - name: list installed files
         run: |
           find /usr/local/bin -name 'dpdk*' -or -name 'spdk*'

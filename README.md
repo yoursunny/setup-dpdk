@@ -26,7 +26,7 @@ steps:
   - uses: actions/cache@v2
     with:
       path: |
-        ~/setup-dpdk.cache.txz
-      key: ${{ matrix.os }}_${{ matrix.compiler }}_${{ hashFiles('.github/workflows/*.yml') }}
+        ~/setup-dpdk
+      key: ${{ matrix.os }}_${{ matrix.compiler }}_DPDK2011_SPDK2010
       # cache key should include OS, compiler, and DPDK/SPDK version
 ```
