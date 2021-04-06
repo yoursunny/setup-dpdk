@@ -7,14 +7,14 @@ mkdir -p $CODEROOT/dpdk_$DPDKVER $CODEROOT/spdk_$SPDKVER
 
 cd $CODEROOT/spdk_$SPDKVER
 if ! [[ -f scripts/pkgdep.sh ]]; then
-  curl -sL https://github.com/spdk/spdk/archive/v$SPDKVER.tar.gz | tar -xz --strip-components=1
+  curl -sfL https://github.com/spdk/spdk/archive/v$SPDKVER.tar.gz | tar -xz --strip-components=1
 fi
-sudo apt-get install python3-setuptools
+sudo apt-get install python3-pyelftools python3-setuptools
 sudo scripts/pkgdep.sh
 
 cd $CODEROOT/dpdk_$DPDKVER
 if ! [[ -f meson.build ]]; then
-  curl -sL https://static.dpdk.org/rel/dpdk-$DPDKVER.tar.xz | tar -xJ --strip-components=1
+  curl -sfL https://static.dpdk.org/rel/dpdk-$DPDKVER.tar.xz | tar -xJ --strip-components=1
 fi
 
 MESONVER=$(meson --version)

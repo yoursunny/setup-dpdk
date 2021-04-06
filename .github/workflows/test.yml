@@ -27,9 +27,10 @@ jobs:
           key: ${{ matrix.os }}_${{ matrix.compiler }}_${{ hashFiles('.github/workflows/*.yml', 'action.yml', 'main.sh') }}
       - uses: ./
         with:
-          dpdk-version: '20.11'
-          spdk-version: '20.10'
+          dpdk-version: '21.02'
+          spdk-version: '21.01.1'
+          target-arch: haswell
       - name: list installed files
         run: |
-          find /usr/local/bin -name 'dpdk*' -or -name 'spdk*'
-          find /usr/local/lib -name 'librte_*' -o -name 'libspdk_*'
+          sudo find /usr/local/bin -name 'dpdk*' -o -name 'spdk*'
+          sudo find /usr/local/lib -name 'librte_*' -o -name 'libspdk_*'
