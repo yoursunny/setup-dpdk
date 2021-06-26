@@ -17,7 +17,6 @@ if ! [[ -f meson.build ]]; then
   curl -sfL https://static.dpdk.org/rel/dpdk-$DPDKVER.tar.xz | tar -xJ --strip-components=1
 fi
 
-MESONVER=$(meson --version)
 if jq -e '.meson_version.full != "'$(meson --version)'"' build/meson-info/meson-info.json &>/dev/null; then
   rm -rf build/
 fi
