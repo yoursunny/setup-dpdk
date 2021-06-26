@@ -6,7 +6,8 @@ inputs:
     required: true
   spdk-version:
     description: SPDK version
-    required: true
+    required: false
+    default: none
   target-arch:
     description: target architecture
     required: false
