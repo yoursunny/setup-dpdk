@@ -9,7 +9,7 @@ This Action installs DPDK and SPDK to `/usr/local`, and then automatically confi
 
 ```yaml
 steps:
-- uses: yoursunny/setup-dpdk@master # optional: use commit SHA instead of 'master' to ensure stability
+- uses: yoursunny/setup-dpdk@main # optional: use commit SHA instead of 'main' to ensure stability
   with:
     dpdk-version: '20.11' # required
     spdk-version: '20.10' # required
