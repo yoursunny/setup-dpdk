@@ -6,7 +6,6 @@ CODEROOT=$HOME/setup-dpdk
 mkdir -p $CODEROOT/dpdk_$DPDKVER
 
 sudo apt-get install python3-pyelftools python3-setuptools
-sudo scripts/pkgdep.sh
 
 cd $CODEROOT/dpdk_$DPDKVER
 if ! [[ -f meson.build ]]; then
@@ -31,6 +30,8 @@ if [[ ! -z $SPDKVER && -n $SPDKVER && $SPDKVER != "none" ]]; then
   if ! [[ -f scripts/pkgdep.sh ]]; then
     curl -sfL https://github.com/spdk/spdk/archive/v$SPDKVER.tar.gz | tar -xz --strip-components=1
   fi
+
+  sudo scripts/pkgdep.sh
 
   cd $CODEROOT/spdk_$SPDKVER
   if ! [[ -f build/lib/libspdk_env_dpdk.a ]]; then
