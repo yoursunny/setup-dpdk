@@ -22,7 +22,7 @@ sudo ninja -C build install
 sudo find /usr/local/lib -name 'librte_*.a' -delete
 sudo ldconfig
 
-if [[ ! -z $SPDKVER && -n $SPDKVER && $SPDKVER != "none" ]]; then
+if ! [[ -z $SPDKVER ]] && [[ -n $SPDKVER ]] && [[ $SPDKVER != "none" ]]; then
   mkdir -p  $CODEROOT/spdk_$SPDKVER
   cd $CODEROOT/spdk_$SPDKVER
   if ! [[ -f scripts/pkgdep.sh ]]; then

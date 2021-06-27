@@ -15,6 +15,10 @@ jobs:
         compiler:
           - gcc
           - clang
+        spdk-version:
+          - 
+          - none
+          - '21.01.1'
       fail-fast: false
     env:
       CC: ${{ matrix.compiler }}
@@ -35,7 +39,7 @@ jobs:
       - uses: ./
         with:
           dpdk-version: '21.02'
-          spdk-version: '21.01.1'
+          spdk-version: ${{ matrix.spdk-version }}
           target-arch: haswell
       - name: list installed files
         run: |
