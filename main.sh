@@ -2,6 +2,21 @@
 set -e
 set -o pipefail
 
+# Install all dependencies based on the OS distribution
+if [ -n "$(command -v apt-get)" ]; then
+  sudo apt-get update;
+  sudo apt-get -y install \
+    jq \
+    ninja-build \
+    python3 \
+    python3-pip \
+    python3-pyelftools \
+    python3-setuptools \
+    python3-wheel
+    
+  sudo pip3 install meson
+fi
+
 CODEROOT=$HOME/setup-dpdk
 mkdir -p $CODEROOT/dpdk_$DPDKVER
 
