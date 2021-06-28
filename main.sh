@@ -3,16 +3,19 @@ set -eo pipefail
 CODEROOT=$HOME/setup-dpdk
 
 install_dependencies() {
-  local APT_PKGS=(python3-pyelftools)
-  if ! which meson >/dev/null; then
-    APT_PKGS+=(python3-pip python3-setuptools python3-wheel)
-  fi
+  local APT_PKGS=(
+    libnuma-dev
+    python3-pip
+    python3-pyelftools
+    python3-setuptools
+    python3-wheel
+  )
   if ! which ninja >/dev/null; then
     APT_PKGS+=(ninja-build)
   fi
 
-  sudo apt-get update
-  sudo apt-get -y --no-install-recommends install "${APT_PKGS[@]}"
+  sudo apt-get -y -qq update
+  sudo apt-get -y -qq --no-install-recommends install "${APT_PKGS[@]}"
 
   if ! which meson >/dev/null; then
     sudo pip3 install meson
