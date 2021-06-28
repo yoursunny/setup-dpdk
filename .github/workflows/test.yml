@@ -12,26 +12,22 @@ jobs:
         os:
           - ubuntu-18.04
           - ubuntu-20.04
-        compiler:
-          - gcc
-          - clang
         spdk-version:
-          - 
           - none
-          - '21.01.1'
+          - '21.04'
       fail-fast: false
     env:
-      CC: ${{ matrix.compiler }}
+      CC: clang
     steps:
       - uses: actions/checkout@v2
       - uses: actions/cache@v2
         with:
           path: |
             ~/setup-dpdk
-          key: ${{ matrix.os }}_${{ matrix.compiler }}_${{ hashFiles('.github/workflows/*.yml', 'action.yml', 'main.sh') }}
+          key: ${{ matrix.os }}_${{ hashFiles('.github/workflows/*.yml', 'action.yml', 'main.sh') }}
       - uses: ./
         with:
-          dpdk-version: '21.02'
+          dpdk-version: '21.05'
           spdk-version: ${{ matrix.spdk-version }}
           target-arch: haswell
       - name: list installed files
