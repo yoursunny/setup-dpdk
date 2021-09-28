@@ -1,6 +1,6 @@
 # `yoursunny/setup-dpdk` GitHub Action
 
-This is a GitHub Action that installs [Data Plane Development Kit (DPDK)](https://www.dpdk.org/) and [Storage Performance Development Kit (SPDK)](https://spdk.io/).
+This is a GitHub Action that installs [Data Plane Development Kit (DPDK)](https://www.dpdk.org) and [Storage Performance Development Kit (SPDK)](https://spdk.io).
 This Action installs DPDK and SPDK to `/usr/local`, and then automatically configures hugepages for use in DPDK applications.
 
 [DEV Community article](https://dev.to/yoursunny/install-data-plane-development-kit-dpdk-and-build-ndn-dpdk-35o5)
@@ -11,10 +11,10 @@ This Action installs DPDK and SPDK to `/usr/local`, and then automatically confi
 steps:
 - uses: yoursunny/setup-dpdk@main # you may use commit SHA instead of 'main' to ensure stability
   with:
-    dpdk-version: '21.05' # required
-    spdk-version: '21.04' # optional, default is not installing SPDK
+    dpdk-version: '21.08' # required
+    spdk-version: '21.07' # optional, default is not installing SPDK
     target-arch: haswell  # optional
-    hugepages: 2048       # optional, default is 2048
+    setup-hugepages: 4096 # optional, default is 4096MB
   env:
     CC: clang # optional; compiler must be installed
 ```
@@ -30,6 +30,6 @@ steps:
   with:
     path: |
       ~/setup-dpdk
-    key: ${{ matrix.os }}_${{ matrix.compiler }}_DPDK2011_SPDK2010
+    key: ${{ matrix.os }}_${{ matrix.compiler }}_DPDK2108_SPDK2107
     # cache key should include OS, compiler, and DPDK/SPDK version
 ```

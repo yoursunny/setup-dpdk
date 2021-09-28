@@ -16,7 +16,7 @@ jobs:
           - ubuntu-20.04
         spdk-version:
           - none
-          - '21.04'
+          - '21.07'
       fail-fast: false
     env:
       CC: clang
@@ -29,10 +29,10 @@ jobs:
           key: ${{ matrix.os }}_${{ hashFiles('.github/workflows/*.yml', 'action.yml', 'main.sh') }}
       - uses: ./
         with:
-          dpdk-version: '21.05'
+          dpdk-version: '21.08'
           spdk-version: ${{ matrix.spdk-version }}
           target-arch: haswell
       - name: list installed files
         run: |
           sudo find /usr/local/bin -name 'dpdk*' -o -name 'spdk*'
-          sudo find /usr/local/lib -name 'librte_*' -o -name 'libspdk_*'
+          sudo find /usr/local/lib -name 'librte*' -o -name 'libspdk*'

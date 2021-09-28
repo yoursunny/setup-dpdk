@@ -34,7 +34,7 @@ install_dpdk() {
   fi
 
   if ! [[ -f build/lib/librte_eal.a ]]; then
-    meson -Ddebug=true -Doptimization=3 -Dmachine=$TARGETARCH -Dtests=false --libdir=lib build
+    meson -Ddebug=true -Doptimization=3 -Dcpu_instruction_set=$TARGETARCH -Dtests=false --libdir=lib build
     ninja -C build
   fi
   sudo ninja -C build install
@@ -51,8 +51,15 @@ install_spdk() {
   sudo scripts/pkgdep.sh
 
   if ! [[ -f build/lib/libspdk_env_dpdk.a ]]; then
-    ./configure --target-arch=$TARGETARCH --enable-debug --disable-tests --with-shared \
-      --with-dpdk=/usr/local --without-vhost --without-isal --without-fuse
+    WITH_URING=
+    if pkg-config liburing; then
+      WITH_URING=--with-uring
+    fi
+
+    ./configure --target-arch=$TARGETARCH --with-shared \
+      --disable-tests --disable-unit-tests --disable-examples --disable-apps \
+      --with-dpdk $WITH_URING \
+      --without-crypto --without-fuse --without-isal --without-vhost
     make -j$(nproc)
   fi
   sudo make install
@@ -67,8 +74,7 @@ install_dpdk
 if [[ $SPDKVER != 'none' ]]; then
   install_spdk
 fi
-if [[ $NRHUGE -gt 0 ]]; then
-  echo $NRHUGE | sudo tee /sys/devices/system/node/node*/hugepages/hugepages-2048kB/nr_hugepages >/dev/null
-  sudo mkdir -p /mnt/huge2M
-  sudo mount -t hugetlbfs nodev /mnt/huge2M -o pagesize=2M
+if [[ $HUGE -gt 0 ]]; then
+  sudo sh -c "while ! dpdk-hugepages.py --setup ${HUGE}M; do sleep 1; done"
+  dpdk-hugepages.py --show
 fi
