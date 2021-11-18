@@ -10,14 +10,14 @@ install_dependencies() {
     python3-setuptools
     python3-wheel
   )
-  if ! which ninja >/dev/null; then
+  if ! command -v ninja >/dev/null; then
     APT_PKGS+=(ninja-build)
   fi
 
   sudo apt-get -y -qq update
   sudo apt-get -y -qq --no-install-recommends install "${APT_PKGS[@]}"
 
-  if ! which meson >/dev/null; then
+  if ! command -v meson >/dev/null; then
     sudo pip3 install meson
   fi
 }
@@ -26,10 +26,11 @@ install_dpdk() {
   mkdir -p $CODEROOT/dpdk_$DPDKVER
   cd $CODEROOT/dpdk_$DPDKVER
   if ! [[ -f meson.build ]]; then
-    curl -sfL https://static.dpdk.org/rel/dpdk-$DPDKVER.tar.xz | tar -xJ --strip-components=1
+    curl -fsLS https://github.com/DPDK/dpdk/archive/refs/tags/v$DPDKVER.tar.gz | tar -xz --strip-components=1
   fi
 
   if jq -e --arg mesonver $(meson --version) '.meson_version.full != $mesonver' build/meson-info/meson-info.json &>/dev/null; then
+    echo 'Meson version changed, cannot use cached build'
     rm -rf build/
   fi
 
@@ -46,7 +47,7 @@ install_spdk() {
   mkdir -p  $CODEROOT/spdk_$SPDKVER
   cd $CODEROOT/spdk_$SPDKVER
   if ! [[ -f scripts/pkgdep.sh ]]; then
-    curl -sfL https://github.com/spdk/spdk/archive/v$SPDKVER.tar.gz | tar -xz --strip-components=1
+    curl -fsLS https://github.com/spdk/spdk/archive/v$SPDKVER.tar.gz | tar -xz --strip-components=1
   fi
   sudo scripts/pkgdep.sh
 
@@ -67,11 +68,11 @@ install_spdk() {
   sudo ldconfig
 }
 
-if which apt-get >/dev/null; then
+if command -v apt-get >/dev/null; then
   install_dependencies
 fi
 install_dpdk
-if [[ $SPDKVER != 'none' ]]; then
+if [[ $SPDKVER != none ]]; then
   install_spdk
 fi
 if [[ $HUGE -gt 0 ]]; then

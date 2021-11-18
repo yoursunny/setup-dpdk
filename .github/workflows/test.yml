@@ -16,7 +16,7 @@ jobs:
           - ubuntu-20.04
         spdk-version:
           - none
-          - '21.07'
+          - '21.10'
       fail-fast: false
     env:
       CC: clang
@@ -29,7 +29,7 @@ jobs:
           key: ${{ matrix.os }}_${{ hashFiles('.github/workflows/*.yml', 'action.yml', 'main.sh') }}
       - uses: ./
         with:
-          dpdk-version: '21.08'
+          dpdk-version: '21.11-rc3'
           spdk-version: ${{ matrix.spdk-version }}
           target-arch: haswell
       - name: list installed files
