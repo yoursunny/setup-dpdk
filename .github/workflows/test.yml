@@ -16,23 +16,24 @@ jobs:
           - ubuntu-20.04
         spdk-version:
           - none
-          - '21.10'
+          - '22.01'
       fail-fast: false
     env:
       CC: clang
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v2
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
         with:
           path: |
             ~/setup-dpdk
           key: ${{ matrix.os }}_${{ hashFiles('.github/workflows/*.yml', 'action.yml', 'main.sh') }}
-      - uses: ./
+      - name: Run setup-dpdk action
+        uses: ./
         with:
-          dpdk-version: '21.11-rc3'
+          dpdk-version: '22.03'
           spdk-version: ${{ matrix.spdk-version }}
           target-arch: haswell
-      - name: list installed files
+      - name: List installed files
         run: |
           sudo find /usr/local/bin -name 'dpdk*' -o -name 'spdk*'
           sudo find /usr/local/lib -name 'librte*' -o -name 'libspdk*'
