@@ -1,17 +1,22 @@
 #!/bin/bash
-set -eo pipefail
+set -euo pipefail
 CODEROOT=$HOME/setup-dpdk
 
 install_dependencies() {
   local APT_PKGS=(
+    libaio-dev
     libnuma-dev
+    ninja-build
     python3-pip
     python3-pyelftools
     python3-setuptools
     python3-wheel
   )
-  if ! command -v ninja >/dev/null; then
-    APT_PKGS+=(ninja-build)
+  if [[ $SPDKVER != none ]]; then
+    APT_PKGS+=(
+      libaio-dev
+      uuid-dev
+    )
   fi
 
   sudo apt-get -y -qq update
@@ -26,7 +31,7 @@ install_dpdk() {
   mkdir -p $CODEROOT/dpdk_$DPDKVER
   cd $CODEROOT/dpdk_$DPDKVER
   if ! [[ -f meson.build ]]; then
-    curl -fsLS https://github.com/DPDK/dpdk/archive/refs/tags/v$DPDKVER.tar.gz | tar -xz --strip-components=1
+    curl -fsLS https://github.com/DPDK/dpdk/archive/v$DPDKVER.tar.gz | tar -xz --strip-components=1
   fi
 
   if jq -e --arg mesonver $(meson --version) '.meson_version.full != $mesonver' build/meson-info/meson-info.json &>/dev/null; then
@@ -49,7 +54,6 @@ install_spdk() {
   if ! [[ -f scripts/pkgdep.sh ]]; then
     curl -fsLS https://github.com/spdk/spdk/archive/v$SPDKVER.tar.gz | tar -xz --strip-components=1
   fi
-  sudo scripts/pkgdep.sh
 
   if ! [[ -f build/lib/libspdk_env_dpdk.a ]]; then
     WITH_URING=
@@ -57,10 +61,22 @@ install_spdk() {
       WITH_URING=--with-uring
     fi
 
-    ./configure --target-arch=$TARGETARCH --with-shared \
-      --disable-tests --disable-unit-tests --disable-examples --disable-apps \
-      --with-dpdk $WITH_URING \
-      --without-crypto --without-fuse --without-isal --without-vhost
+    if expr $SPDKVER '>=' 22.09 >/dev/null; then
+      sed -i '/^\s*if .*isa-l\/autogen.sh/,/^\s*fi$/ s/.*/CONFIG[ISAL]=n/' configure
+      ./configure --target-arch=native --with-shared \
+        --disable-tests --disable-unit-tests --disable-examples --disable-apps \
+        --with-dpdk $WITH_URING \
+        --without-idxd --without-crypto --without-fio --without-xnvme --without-vhost \
+        --without-virtio --without-vfio-user --without-pmdk --without-reduce --without-rbd \
+        --without-rdma --without-fc --without-daos --without-iscsi-initiator --without-vtune \
+        --without-ocf --without-fuse --without-nvme-cuse --without-raid5f --without-wpdk \
+        --without-usdt --without-sma
+    else
+      ./configure --target-arch=$TARGETARCH --with-shared \
+        --disable-tests --disable-unit-tests --disable-examples --disable-apps \
+        --with-dpdk $WITH_URING \
+        --without-crypto --without-fuse --without-isal --without-vhost
+    fi
     make -j$(nproc)
   fi
   sudo make install
