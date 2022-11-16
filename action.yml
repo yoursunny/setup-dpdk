@@ -4,6 +4,10 @@ inputs:
   dpdk-version:
     description: DPDK version
     required: true
+  dpdk-patches:
+    description: DPDK patches, comma separated
+    required: false
+    default: ''
   spdk-version:
     description: SPDK version
     required: false
@@ -25,6 +29,7 @@ runs:
       shell: bash
       env:
         DPDKVER: ${{ inputs.dpdk-version }}
+        DPDKPATCH: ${{ inputs.dpdk-patches }}
         SPDKVER: ${{ inputs.spdk-version }}
         TARGETARCH: ${{ inputs.target-arch }}
         HUGE: ${{ inputs.setup-hugepages }}

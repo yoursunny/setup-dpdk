@@ -16,10 +16,17 @@ jobs:
           - ubuntu-22.04
         dpdk-version:
           - '22.07'
+        dpdk-patches:
+          - ''
         spdk-version:
           - none
           - '22.05'
           - '22.09'
+        include:
+          - os: ubuntu-22.04
+            dpdk-version: '22.07'
+            dpdk-patches: 25787
+            spdk-version: none
       fail-fast: false
     env:
       CC: clang
@@ -29,11 +36,12 @@ jobs:
         with:
           path: |
             ~/setup-dpdk
-          key: ${{ matrix.os }}_${{ matrix.dpdk-version }}_${{ matrix.spdk-version }}_${{ hashFiles('.github/workflows/*.yml', 'action.yml', 'main.sh') }}
+          key: ${{ matrix.os }}_${{ matrix.dpdk-version }}_${{ matrix.dpdk-patches }}_${{ matrix.spdk-version }}_${{ hashFiles('.github/workflows/*.yml', 'action.yml', 'main.sh') }}
       - name: Run setup-dpdk action
         uses: ./
         with:
           dpdk-version: ${{ matrix.dpdk-version }}
+          dpdk-patches: ${{ matrix.dpdk-patches }}
           spdk-version: ${{ matrix.spdk-version }}
           target-arch: haswell
       - name: List installed files

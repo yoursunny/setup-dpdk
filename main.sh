@@ -32,9 +32,11 @@ install_dpdk() {
   cd $CODEROOT/dpdk_$DPDKVER
   if ! [[ -f meson.build ]]; then
     curl -fsLS https://github.com/DPDK/dpdk/archive/v$DPDKVER.tar.gz | tar -xz --strip-components=1
+    echo -n "$DPDKPATCH" | xargs -d, --no-run-if-empty -I{} \
+      sh -c "curl -fsLS https://patches.dpdk.org/series/{}/mbox/ | patch -p1"
   fi
 
-  if jq -e --arg mesonver $(meson --version) '.meson_version.full != $mesonver' build/meson-info/meson-info.json &>/dev/null; then
+  if ! jq -e --arg mesonver $(meson --version) '.meson_version.full == $mesonver' build/meson-info/meson-info.json &>/dev/null; then
     echo 'Meson version changed, cannot use cached build'
     rm -rf build/
   fi
