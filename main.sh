@@ -45,7 +45,7 @@ install_dpdk() {
     meson setup -Ddebug=true -Doptimization=3 -Dcpu_instruction_set=$TARGETARCH -Dtests=false --libdir=lib build
     meson compile -C build
   fi
-  sudo meson install -C build
+  sudo $(command -v meson) install -C build
   sudo find /usr/local/lib -name 'librte_*.a' -delete
   sudo ldconfig
 }
