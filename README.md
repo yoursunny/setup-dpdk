@@ -11,9 +11,9 @@ This Action installs DPDK and SPDK to `/usr/local`, and then automatically confi
 steps:
 - uses: yoursunny/setup-dpdk@main # you may use commit SHA instead of 'main' to ensure stability
   with:
-    dpdk-version: '22.03'       # required
+    dpdk-version: v22.07        # required
     dpdk-patches: '12345,67890' # optional, patch series numbers on https://patches.dpdk.org/project/dpdk/list/
-    spdk-version: '22.01'       # optional, default is not installing SPDK
+    spdk-version: v22.09        # optional, default is not installing SPDK
     target-arch: haswell        # optional
     setup-hugepages: 4096       # optional, default is 4096MB
   env:
@@ -31,6 +31,6 @@ steps:
   with:
     path: |
       ~/setup-dpdk
-    key: ${{ matrix.os }}_${{ matrix.compiler }}_DPDK2203_SPDK2201
+    key: ${{ matrix.os }}_${{ matrix.compiler }}_DPDK2207_SPDK2209
     # cache key should include OS, compiler, and DPDK/SPDK version
 ```

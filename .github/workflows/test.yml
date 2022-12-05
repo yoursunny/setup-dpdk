@@ -15,18 +15,21 @@ jobs:
           - ubuntu-18.04
           - ubuntu-22.04
         dpdk-version:
-          - '22.07'
+          - v22.07
         dpdk-patches:
           - ''
         spdk-version:
           - none
-          - '22.05'
-          - '22.09'
+          - v22.09
         include:
           - os: ubuntu-22.04
-            dpdk-version: '22.07'
+            dpdk-version: v22.07
             dpdk-patches: 25787
             spdk-version: none
+          - os: ubuntu-18.04
+            dpdk-version: v22.11
+            dpdk-patches: 25787
+            spdk-version: 5497616e8ff768313a441980d44f439558509b4f
       fail-fast: false
     env:
       CC: clang

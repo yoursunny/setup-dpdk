@@ -31,7 +31,7 @@ install_dpdk() {
   mkdir -p $CODEROOT/dpdk_$DPDKVER
   cd $CODEROOT/dpdk_$DPDKVER
   if ! [[ -f meson.build ]]; then
-    curl -fsLS https://github.com/DPDK/dpdk/archive/v$DPDKVER.tar.gz | tar -xz --strip-components=1
+    curl -fsLS https://github.com/DPDK/dpdk/archive/$DPDKVER.tar.gz | tar -xz --strip-components=1
     echo -n "$DPDKPATCH" | xargs -d, --no-run-if-empty -I{} \
       sh -c "curl -fsLS https://patches.dpdk.org/series/{}/mbox/ | patch -p1"
   fi
@@ -42,10 +42,10 @@ install_dpdk() {
   fi
 
   if ! [[ -f build/lib/librte_eal.a ]]; then
-    meson -Ddebug=true -Doptimization=3 -Dcpu_instruction_set=$TARGETARCH -Dtests=false --libdir=lib build
-    ninja -C build
+    meson setup -Ddebug=true -Doptimization=3 -Dcpu_instruction_set=$TARGETARCH -Dtests=false --libdir=lib build
+    meson compile -C build
   fi
-  sudo ninja -C build install
+  sudo meson install -C build
   sudo find /usr/local/lib -name 'librte_*.a' -delete
   sudo ldconfig
 }
@@ -54,7 +54,7 @@ install_spdk() {
   mkdir -p  $CODEROOT/spdk_$SPDKVER
   cd $CODEROOT/spdk_$SPDKVER
   if ! [[ -f scripts/pkgdep.sh ]]; then
-    curl -fsLS https://github.com/spdk/spdk/archive/v$SPDKVER.tar.gz | tar -xz --strip-components=1
+    curl -fsLS https://github.com/spdk/spdk/archive/$SPDKVER.tar.gz | tar -xz --strip-components=1
   fi
 
   if ! [[ -f build/lib/libspdk_env_dpdk.a ]]; then
@@ -63,22 +63,16 @@ install_spdk() {
       WITH_URING=--with-uring
     fi
 
-    if expr $SPDKVER '>=' 22.09 >/dev/null; then
-      sed -i '/^\s*if .*isa-l\/autogen.sh/,/^\s*fi$/ s/.*/CONFIG[ISAL]=n/' configure
-      ./configure --target-arch=native --with-shared \
-        --disable-tests --disable-unit-tests --disable-examples --disable-apps \
-        --with-dpdk $WITH_URING \
-        --without-idxd --without-crypto --without-fio --without-xnvme --without-vhost \
-        --without-virtio --without-vfio-user --without-pmdk --without-reduce --without-rbd \
-        --without-rdma --without-fc --without-daos --without-iscsi-initiator --without-vtune \
-        --without-ocf --without-fuse --without-nvme-cuse --without-raid5f --without-wpdk \
-        --without-usdt --without-sma
-    else
-      ./configure --target-arch=$TARGETARCH --with-shared \
-        --disable-tests --disable-unit-tests --disable-examples --disable-apps \
-        --with-dpdk $WITH_URING \
-        --without-crypto --without-fuse --without-isal --without-vhost
-    fi
+    sed -i '/^\s*if .*isa-l\/autogen.sh/,/^\s*fi$/ s/.*/CONFIG[ISAL]=n/' configure
+    ./configure --target-arch=native --with-shared \
+      --disable-tests --disable-unit-tests --disable-examples --disable-apps \
+      --with-dpdk $WITH_URING \
+      --without-idxd --without-crypto --without-fio --without-xnvme --without-vhost \
+      --without-virtio --without-vfio-user --without-pmdk --without-reduce --without-rbd \
+      --without-rdma --without-fc --without-daos --without-iscsi-initiator --without-vtune \
+      --without-ocf --without-fuse --without-nvme-cuse --without-raid5f --without-wpdk \
+      --without-usdt --without-sma
+
     make -j$(nproc)
   fi
   sudo make install
