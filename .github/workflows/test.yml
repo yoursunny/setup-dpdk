@@ -5,30 +5,25 @@ on:
       - develop
   pull_request:
   workflow_dispatch:
-
+permissions: {}
 jobs:
   test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os:
-          - ubuntu-18.04
           - ubuntu-22.04
         dpdk-version:
-          - v22.07
+          - v22.11
         dpdk-patches:
           - ''
         spdk-version:
           - none
-          - v22.09
+          - v23.01
         include:
           - os: ubuntu-22.04
-            dpdk-version: v22.07
-            dpdk-patches: 25787
-            spdk-version: none
-          - os: ubuntu-18.04
             dpdk-version: v22.11
-            dpdk-patches: 25787
+            dpdk-patches: 26031
             spdk-version: 5497616e8ff768313a441980d44f439558509b4f
       fail-fast: false
     env:
@@ -49,5 +44,5 @@ jobs:
           target-arch: haswell
       - name: List installed files
         run: |
-          sudo find /usr/local/bin -name 'dpdk*' -o -name 'spdk*'
-          sudo find /usr/local/lib -name 'librte*' -o -name 'libspdk*'
+          find /usr/local/bin -name 'dpdk*' -o -name 'spdk*'
+          find /usr/local/lib -name 'librte*' -o -name 'libspdk*'

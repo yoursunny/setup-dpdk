@@ -68,7 +68,7 @@ install_spdk() {
       --disable-tests --disable-unit-tests --disable-examples --disable-apps \
       --with-dpdk $WITH_URING \
       --without-idxd --without-crypto --without-fio --without-xnvme --without-vhost \
-      --without-virtio --without-vfio-user --without-pmdk --without-reduce --without-rbd \
+      --without-virtio --without-vfio-user --without-rbd \
       --without-rdma --without-fc --without-daos --without-iscsi-initiator --without-vtune \
       --without-ocf --without-fuse --without-nvme-cuse --without-raid5f --without-wpdk \
       --without-usdt --without-sma
