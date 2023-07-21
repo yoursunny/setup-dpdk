@@ -8,24 +8,24 @@ on:
 permissions: {}
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os:
           - ubuntu-22.04
         dpdk-version:
-          - v22.11
+          - v23.03
         dpdk-patches:
           - ''
         spdk-version:
           - none
-          - v23.01
+          - v23.05
         include:
           - os: ubuntu-22.04
             dpdk-version: v22.11
             dpdk-patches: 26031
             spdk-version: 5497616e8ff768313a441980d44f439558509b4f
       fail-fast: false
+    runs-on: ${{ matrix.os }}
     env:
       CC: clang
     steps:
@@ -41,7 +41,6 @@ jobs:
           dpdk-version: ${{ matrix.dpdk-version }}
           dpdk-patches: ${{ matrix.dpdk-patches }}
           spdk-version: ${{ matrix.spdk-version }}
-          target-arch: haswell
       - name: List installed files
         run: |
           find /usr/local/bin -name 'dpdk*' -o -name 'spdk*'

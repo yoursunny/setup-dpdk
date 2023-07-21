@@ -60,11 +60,11 @@ install_spdk() {
   if ! [[ -f build/lib/libspdk_env_dpdk.a ]]; then
     WITH_URING=
     if pkg-config liburing; then
-      WITH_URING=--with-uring
+      WITH_URING='--with-uring --without-uring-zns'
     fi
 
     sed -i '/^\s*if .*isa-l\/autogen.sh/,/^\s*fi$/ s/.*/CONFIG[ISAL]=n/' configure
-    ./configure --target-arch=native --with-shared \
+    ./configure --target-arch=$TARGETARCH --with-shared \
       --disable-tests --disable-unit-tests --disable-examples --disable-apps \
       --with-dpdk $WITH_URING \
       --without-idxd --without-crypto --without-fio --without-xnvme --without-vhost \

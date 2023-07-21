@@ -15,7 +15,7 @@ steps:
     dpdk-patches: '12345,67890' # optional, patch series numbers on https://patches.dpdk.org/project/dpdk/list/
     spdk-version: v23.01        # optional, default is not installing SPDK
     target-arch: haswell        # optional
-    setup-hugepages: 4096       # optional, default is 4096MB
+    setup-hugepages: 4096       # optional, default is 4096MB, 0 to disable
   env:
     CC: clang # optional; compiler must be installed
 ```
