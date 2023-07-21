@@ -42,7 +42,9 @@ install_dpdk() {
   fi
 
   if ! [[ -f build/lib/librte_eal.a ]]; then
-    meson setup -Ddebug=true -Doptimization=3 -Dcpu_instruction_set=$TARGETARCH -Dtests=false --libdir=lib build
+    meson setup --libdir=lib -Ddebug=true -Doptimization=3 -Dcpu_instruction_set=$TARGETARCH -Dtests=false \
+      -Ddisable_drivers=common/cnxk,common/dpaax,net/bnxt -Ddisable_apps='test-*' \
+      build
     meson compile -C build
   fi
   sudo $(command -v meson) install -C build
