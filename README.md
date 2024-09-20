@@ -27,7 +27,7 @@ Optionally, enable caching for faster installation:
 
 ```yaml
 steps:
-- uses: actions/cache@v3
+- uses: actions/cache@v4
   with:
     path: |
       ~/setup-dpdk
