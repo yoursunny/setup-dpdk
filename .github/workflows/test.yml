@@ -13,12 +13,12 @@ jobs:
         os:
           - ubuntu-22.04
         dpdk-version:
-          - v23.03
+          - v24.07
         dpdk-patches:
           - ''
         spdk-version:
           - none
-          - v23.05
+          - v24.09-rc1
         include:
           - os: ubuntu-22.04
             dpdk-version: v22.11
@@ -29,8 +29,8 @@ jobs:
     env:
       CC: clang
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/cache@v3
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
         with:
           path: |
             ~/setup-dpdk
