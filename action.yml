@@ -15,9 +15,9 @@ inputs:
   target-arch:
     description: target architecture
     required: false
-    default: haswell
-    # GitHub uses Azure Standard_DS2_v2, oldest CPU is 'haswell'
-    # change to 'native' if using a self-hosted runner
+    default: x86-64-v3
+    # GitHub uses Azure Dadsv5-series with EPYC 7763V processor that satisfies x86-64-v3
+    # change to 'native' if using a self-hosted runner for better performance
   setup-hugepages:
     description: hugepages size in MiB
     required: false
